@@ -14,19 +14,21 @@ import { Stream } from 'most';
 *****************************************/
 
 // for the original, redux-observable style API
-export declare interface Epic<A extends Action, S> {
+export declare interface Epic<A extends Action, S, any> {
   (
     actionStream: Stream<A>,
-    middlewareApi: MiddlewareAPI<S>
+    middlewareApi: MiddlewareAPI<S>,
+    dependencies: any
   ): Stream<A>;
 }
 
 // for the newer, declarative only API, which takes in a state stream
 // to sample via the withState utility instead of exposing dispatch/getState
-export declare interface Epic<A extends Action, S> {
+export declare interface Epic<A extends Action, S, any> {
   (
     actionStream: Stream<A>,
-    stateStream: Stream<S>
+    stateStream: Stream<S>,
+    dependencies: any
   ): Stream<A>;
 }
 
@@ -36,8 +38,9 @@ export interface EpicMiddleware<A extends Action, S> extends Middleware {
   ): void;
 }
 
-export declare function createEpicMiddleware<A extends Action, S> (
-  rootEpic: Epic<A, S>
+export declare function createEpicMiddleware<A extends Action, S, any> (
+  rootEpic: Epic<A, S>,
+  dependencies: any
 ): EpicMiddleware<A, S>;
 
 
@@ -45,9 +48,9 @@ export declare function createStateStreamEnhancer<A extends Action, S> (
   epicMiddleware: EpicMiddleware<A, S>
 ): StoreEnhancer<S>;
 
-export declare function combineEpics<A extends Action, S> (
-  epicsArray: Epic<A, S>[]
-): Epic<A, S>;
+export declare function combineEpics<A extends Action, S, any> (
+  epicsArray: Epic<A, S, any>[],
+): Epic<A, S, any>;
 
 export declare type ActionType = string | symbol
 
